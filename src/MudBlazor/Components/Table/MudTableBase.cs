@@ -45,7 +45,7 @@ namespace MudBlazor
             .AddClass(FooterClass).Build();
 
         /// <summary>
-        /// When editing a row and this is true, the editing row must be saved/cancelled before a new row will be selected.
+        /// When editing a row and this is true, the editing row must be saved/canceled before a new row will be selected.
         /// </summary>
         [Parameter]
         [Category(CategoryTypes.Table.Editing)]
@@ -191,6 +191,13 @@ namespace MudBlazor
         [Parameter]
         [Category(CategoryTypes.Table.Selecting)]
         public bool MultiSelection { get; set; }
+
+        /// <summary>
+        /// When <c>true</c>, a row-click also toggles the checkbox state.
+        /// </summary>
+        [Parameter]
+        [Category(CategoryTypes.Table.Rows)]
+        public bool SelectOnRowClick { get; set; } = true;
 
         /// <summary>
         /// Optional. Add any kind of toolbar to this render fragment.
@@ -359,6 +366,26 @@ namespace MudBlazor
         [Category(CategoryTypes.Table.Editing)]
         public TableApplyButtonPosition ApplyButtonPosition { get; set; } = TableApplyButtonPosition.End;
 
+        /// <summary>
+        /// Set the positon of the StartEdit button, if <see cref="IsEditable"/> IsEditable is true. Defaults to the end of the row
+        /// </summary>
+        [Parameter]
+        [Category(CategoryTypes.Table.Editing)]
+        public TableEditButtonPosition EditButtonPosition { get; set; } = TableEditButtonPosition.End;
+
+        /// <summary>
+        /// Defines how a table row edit will be triggered
+        /// </summary>
+        [Parameter]
+        [Category(CategoryTypes.Table.Editing)]
+        public TableEditTrigger EditTrigger { get; set; } = TableEditTrigger.RowClick;
+
+        /// <summary>
+        /// Defines the edit button that will be rendered when EditTrigger.EditButton
+        /// </summary>
+        [Parameter]
+        [Category(CategoryTypes.Table.Editing)]
+        public RenderFragment<MudBlazorFix.EditButtonContext> EditButtonContent { get; set; }
 
         /// <summary>
         /// The method is called before the item is modified in inline editing.
@@ -408,6 +435,16 @@ namespace MudBlazor
         [Parameter]
         [Category(CategoryTypes.Table.Behavior)]
         public bool Virtualize { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value that determines how many additional items will be rendered
+        /// before and after the visible region. This help to reduce the frequency of rendering
+        /// during scrolling. However, higher values mean that more elements will be present
+        /// in the page.
+        /// </summary>
+        [Parameter]
+        [Category(CategoryTypes.Table.Behavior)]
+        public int OverscanCount { get; set; } = 3;
 
         #region --> Obsolete Forwarders for Backwards-Compatiblilty
         /// <summary>
@@ -508,7 +545,7 @@ namespace MudBlazor
 
         internal abstract void FireRowClickEvent(MouseEventArgs args, MudTr mudTr, object item);
 
-        internal abstract void OnHeaderCheckboxClicked(bool value);
+        internal abstract void OnHeaderCheckboxClicked(bool checkedState);
 
         internal abstract bool IsEditable { get; }
 
